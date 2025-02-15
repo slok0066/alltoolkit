@@ -36,6 +36,33 @@ import QrCode from "@/pages/visual/qr-code";
 import SvgEditor from "@/pages/visual/svg-editor";
 import GradientGenerator from "@/pages/visual/gradient";
 
+// Math & Statistics
+import Calculator from "@/pages/math/calculator";
+import UnitConverter from "@/pages/math/unit-converter";
+import RandomGenerator from "@/pages/math/random";
+import StatisticalCalculator from "@/pages/math/stats";
+import ProbabilityCalculator from "@/pages/math/probability";
+
+// Time & Date
+import TimeConverter from "@/pages/time/converter";
+import DateCalculator from "@/pages/time/calculator";
+import CountdownTimer from "@/pages/time/countdown";
+
+// Security & Encryption
+import PasswordGenerator from "@/pages/security/password";
+import EncryptionTools from "@/pages/security/encryption";
+import JwtDebugger from "@/pages/security/jwt";
+
+// Network & Web
+import HttpStatusCodes from "@/pages/network/http-status";
+import NetworkTools from "@/pages/network/tools";
+import ApiTester from "@/pages/network/api-tester";
+
+// Science & Engineering
+import ScientificCalculator from "@/pages/science/calculator";
+import FormulaReference from "@/pages/science/formulas";
+import UnitConversions from "@/pages/science/units";
+
 function Router() {
   return (
     <Layout>
@@ -71,6 +98,33 @@ function Router() {
         <Route path="/visual/qr-code" component={QrCode} />
         <Route path="/visual/svg-editor" component={SvgEditor} />
         <Route path="/visual/gradient" component={GradientGenerator} />
+
+        {/* Math & Statistics */}
+        <Route path="/math/calculator" component={Calculator} />
+        <Route path="/math/unit-converter" component={UnitConverter} />
+        <Route path="/math/random" component={RandomGenerator} />
+        <Route path="/math/stats" component={StatisticalCalculator} />
+        <Route path="/math/probability" component={ProbabilityCalculator} />
+
+        {/* Time & Date */}
+        <Route path="/time/converter" component={TimeConverter} />
+        <Route path="/time/calculator" component={DateCalculator} />
+        <Route path="/time/countdown" component={CountdownTimer} />
+
+        {/* Security & Encryption */}
+        <Route path="/security/password" component={PasswordGenerator} />
+        <Route path="/security/encryption" component={EncryptionTools} />
+        <Route path="/security/jwt" component={JwtDebugger} />
+
+        {/* Network & Web */}
+        <Route path="/network/http-status" component={HttpStatusCodes} />
+        <Route path="/network/tools" component={NetworkTools} />
+        <Route path="/network/api-tester" component={ApiTester} />
+
+        {/* Science & Engineering */}
+        <Route path="/science/calculator" component={ScientificCalculator} />
+        <Route path="/science/formulas" component={FormulaReference} />
+        <Route path="/science/units" component={UnitConversions} />
 
         <Route component={NotFound} />
       </Switch>
