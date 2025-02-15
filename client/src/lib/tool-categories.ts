@@ -273,8 +273,20 @@ export const categories: Category[] = [
       },
       {
         name: "API Tester",
-        description: "Test API endpoints",
+        description: "Test API endpoints with custom headers and data",
         path: "/network/api-tester",
+        icon: FiWifi
+      },
+      {
+        name: "WebSocket Tester",
+        description: "Test WebSocket connections",
+        path: "/network/websocket",
+        icon: FiWifi
+      },
+      {
+        name: "Port Scanner",
+        description: "Check open ports on a host",
+        path: "/network/ports",
         icon: FiWifi
       }
     ]
