@@ -20,6 +20,18 @@ export const categories: Category[] = [
     icon: FiType,
     tools: [
       {
+        name: "Text Case Converter",
+        description: "Convert text between different cases",
+        path: "/text/case-converter",
+        icon: FiType
+      },
+      {
+        name: "Word Replacer",
+        description: "Find and replace words in text",
+        path: "/text/word-replacer",
+        icon: FiType
+      },
+      {
         name: "Word Counter",
         description: "Count words, characters, and paragraphs",
         path: "/text/word-counter",
@@ -36,18 +48,6 @@ export const categories: Category[] = [
         description: "Live preview of Markdown text",
         path: "/text/markdown-preview",
         icon: FiType
-      },
-      {
-        name: "Text Diff",
-        description: "Compare and find differences in text",
-        path: "/text/diff",
-        icon: FiType
-      },
-      {
-        name: "Quote Generator",
-        description: "Generate random quotes and citations",
-        path: "/text/quotes",
-        icon: FiType
       }
     ]
   },
@@ -56,15 +56,21 @@ export const categories: Category[] = [
     icon: FiCode,
     tools: [
       {
-        name: "JSON Tools",
-        description: "Format, validate and convert JSON data",
-        path: "/dev/json-formatter",
+        name: "API Status Checker",
+        description: "Check API endpoints status",
+        path: "/dev/api-status",
         icon: FiCode
       },
       {
-        name: "HTML Formatter",
-        description: "Format and prettify HTML code",
-        path: "/dev/html-formatter",
+        name: "cURL Builder",
+        description: "Build and format cURL commands",
+        path: "/dev/curl-builder",
+        icon: FiCode
+      },
+      {
+        name: "JSON Tools",
+        description: "Format, validate and convert JSON data",
+        path: "/dev/json-formatter",
         icon: FiCode
       },
       {
@@ -78,18 +84,6 @@ export const categories: Category[] = [
         description: "Test and validate regular expressions",
         path: "/dev/regex",
         icon: FiCode
-      },
-      {
-        name: "Git Command Helper",
-        description: "Common git commands and usage",
-        path: "/dev/git-helper",
-        icon: FiCode
-      },
-      {
-        name: "Code Snippet Manager",
-        description: "Store and organize code snippets",
-        path: "/dev/snippets",
-        icon: FiCode
       }
     ]
   },
@@ -97,6 +91,18 @@ export const categories: Category[] = [
     name: "Data & Conversion",
     icon: FiDatabase,
     tools: [
+      {
+        name: "JSON Path Finder",
+        description: "Find and extract JSON paths",
+        path: "/data/json-path",
+        icon: FiDatabase
+      },
+      {
+        name: "YAML Validator",
+        description: "Validate and format YAML",
+        path: "/data/yaml-validator",
+        icon: FiDatabase
+      },
       {
         name: "Base64 Tools",
         description: "Encode and decode Base64 strings",
@@ -107,12 +113,6 @@ export const categories: Category[] = [
         name: "CSV to JSON",
         description: "Convert CSV files to JSON format",
         path: "/data/csv-json",
-        icon: FiDatabase
-      },
-      {
-        name: "URL Tools",
-        description: "Encode, decode and parse URLs",
-        path: "/data/url-tools",
         icon: FiDatabase
       },
       {
