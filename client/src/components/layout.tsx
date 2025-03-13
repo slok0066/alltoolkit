@@ -1,17 +1,18 @@
-import { motion } from "framer-motion";
+import { Header } from "./header";
+import { Footer } from "./footer";
 
-export function Layout({ children }: { children: React.ReactNode }) {
+interface LayoutProps {
+  children: React.ReactNode;
+}
+
+export function Layout({ children }: LayoutProps) {
   return (
-    <motion.div 
-      initial={{ opacity: 0 }}
-      animate={{ opacity: 1 }}
-      transition={{ duration: 0.3 }}
-      className="min-h-screen bg-background"
-    >
-      {/* Main content */}
-      <main className="container mx-auto">
+    <div className="min-h-screen flex flex-col">
+      <Header />
+      <main className="flex-1">
         {children}
       </main>
-    </motion.div>
+      <Footer />
+    </div>
   );
 }

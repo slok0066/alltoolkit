@@ -2,28 +2,34 @@ import { useState } from "react";
 import { Card, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Textarea } from "@/components/ui/textarea";
+import { Label } from "@/components/ui/label";
+import { Switch } from "@/components/ui/switch";
 import { useToast } from "@/hooks/use-toast";
+import { Copy, Download } from "lucide-react";
+import prettier from "prettier/standalone";
+import htmlParser from "prettier/parser-html";
 import { motion } from "framer-motion";
 import { ToolLayout } from "@/components/tool-layout";
 
 export default function HtmlFormatter() {
   const [input, setInput] = useState("");
-  const [formatted, setFormatted] = useState("");
+  const [output, setOutput] = useState("");
+  const [wrapLines, setWrapLines] = useState(true);
   const { toast } = useToast();
 
-  const formatHtml = () => {
+  const formatHtml = async () => {
     try {
-      // Basic HTML formatting for now
-      const formatted = input
-        .replace(/>\s+</g, ">\n<")
-        .replace(/</g, "\n<")
-        .replace(/>/g, ">\n")
-        .split("\n")
-        .filter(line => line.trim())
-        .map(line => "  " + line.trim())
-        .join("\n");
+      if (!input) {
+        throw new Error("Please enter HTML to format");
+      }
 
-      setFormatted(formatted);
+      const formatted = await prettier.format(input, {
+        parser: "html",
+        plugins: [htmlParser],
+        printWidth: wrapLines ? 80 : 120,
+      });
+
+      setOutput(formatted);
       toast({
         title: "HTML formatted successfully",
         variant: "default",
@@ -63,7 +69,7 @@ export default function HtmlFormatter() {
             <Textarea
               readOnly
               className="min-h-[400px] font-mono"
-              value={formatted}
+              value={output}
               placeholder="Formatted HTML will appear here..."
             />
           </CardContent>

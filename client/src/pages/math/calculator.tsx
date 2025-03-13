@@ -45,8 +45,8 @@ export default function Calculator() {
 
   return (
     <ToolLayout
-      title="Calculator"
-      description="Basic and scientific calculator functions"
+      title="Basic Calculator"
+      description="Simple arithmetic calculator for basic calculations"
     >
       <div className="max-w-md mx-auto space-y-6">
         <Card>

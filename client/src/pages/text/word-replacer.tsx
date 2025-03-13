@@ -1,43 +1,57 @@
 import { useState } from "react";
+import { ToolLayout } from "@/components/tool-layout";
 import { Card, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
-import { Textarea } from "@/components/ui/textarea";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { Checkbox } from "@/components/ui/checkbox";
-import { useToast } from "@/hooks/use-toast";
+import { Textarea } from "@/components/ui/textarea";
+import { Switch } from "@/components/ui/switch";
 import { motion } from "framer-motion";
-import { ToolLayout } from "@/components/tool-layout";
-import { Copy } from "lucide-react";
+import { useToast } from "@/hooks/use-toast";
+import { Copy, Plus, Trash2 } from "lucide-react";
+
+interface Replacement {
+  find: string;
+  replace: string;
+}
 
 export default function WordReplacer() {
   const [text, setText] = useState("");
-  const [findText, setFindText] = useState("");
-  const [replaceText, setReplaceText] = useState("");
-  const [caseSensitive, setCaseSensitive] = useState(false);
-  const [wholeWord, setWholeWord] = useState(false);
+  const [replacements, setReplacements] = useState<Replacement[]>([
+    { find: "", replace: "" }
+  ]);
   const [result, setResult] = useState("");
+  const [caseSensitive, setCaseSensitive] = useState(false);
   const { toast } = useToast();
 
-  const replaceWords = () => {
-    try {
-      if (!text) {
-        throw new Error("Please enter text to process");
-      }
-      if (!findText) {
-        throw new Error("Please enter text to find");
-      }
+  const addReplacement = () => {
+    setReplacements([...replacements, { find: "", replace: "" }]);
+  };
 
-      let flags = "g";
-      if (!caseSensitive) flags += "i";
+  const removeReplacement = (index: number) => {
+    setReplacements(replacements.filter((_, i) => i !== index));
+  };
+
+  const updateReplacement = (index: number, field: keyof Replacement, value: string) => {
+    setReplacements(replacements.map((item, i) => 
+      i === index ? { ...item, [field]: value } : item
+    ));
+  };
+
+  const replaceText = () => {
+    try {
+      let newText = text;
+      replacements.forEach(({ find, replace }) => {
+        if (!find) return;
+        
+        const regex = new RegExp(
+          find.replace(/[.*+?^${}()|[\]\\]/g, '\\$&'),
+          caseSensitive ? 'g' : 'gi'
+        );
+        newText = newText.replace(regex, replace);
+      });
       
-      let pattern = findText;
-      if (wholeWord) pattern = `\\b${pattern}\\b`;
-      
-      const regex = new RegExp(pattern, flags);
-      const replaced = text.replace(regex, replaceText);
-      
-      setResult(replaced);
+      setResult(newText);
       toast({
         title: "Text replaced successfully",
         variant: "default",
@@ -63,88 +77,97 @@ export default function WordReplacer() {
   return (
     <ToolLayout
       title="Word Replacer"
-      description="Find and replace words in text"
+      description="Find and replace multiple words or phrases in text"
     >
-      <div className="max-w-2xl mx-auto space-y-6">
-        <Card>
-          <CardContent className="pt-6 space-y-6">
-            <div className="space-y-2">
-              <Label>Text</Label>
-              <Textarea
-                value={text}
-                onChange={(e) => setText(e.target.value)}
-                placeholder="Enter your text here..."
-                className="min-h-[100px]"
-              />
-            </div>
-
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+      <div className="grid gap-6 md:grid-cols-2">
+        <div className="space-y-6">
+          <Card>
+            <CardContent className="pt-6 space-y-6">
               <div className="space-y-2">
-                <Label>Find</Label>
-                <Input
-                  value={findText}
-                  onChange={(e) => setFindText(e.target.value)}
-                  placeholder="Text to find"
+                <Label>Input Text</Label>
+                <Textarea
+                  value={text}
+                  onChange={(e) => setText(e.target.value)}
+                  placeholder="Enter text to modify..."
+                  className="min-h-[200px]"
                 />
               </div>
 
-              <div className="space-y-2">
-                <Label>Replace With</Label>
-                <Input
-                  value={replaceText}
-                  onChange={(e) => setReplaceText(e.target.value)}
-                  placeholder="Text to replace with"
-                />
-              </div>
-            </div>
-
-            <div className="flex flex-col sm:flex-row gap-4">
-              <div className="flex items-center space-x-2">
-                <Checkbox
-                  id="caseSensitive"
-                  checked={caseSensitive}
-                  onCheckedChange={(checked) => setCaseSensitive(checked as boolean)}
-                />
-                <Label htmlFor="caseSensitive">Case Sensitive</Label>
-              </div>
-
-              <div className="flex items-center space-x-2">
-                <Checkbox
-                  id="wholeWord"
-                  checked={wholeWord}
-                  onCheckedChange={(checked) => setWholeWord(checked as boolean)}
-                />
-                <Label htmlFor="wholeWord">Whole Words Only</Label>
-              </div>
-            </div>
-
-            <Button onClick={replaceWords} className="w-full">
-              Replace Text
-            </Button>
-
-            {result && (
-              <motion.div
-                initial={{ opacity: 0 }}
-                animate={{ opacity: 1 }}
-                className="space-y-2"
-              >
+              <div className="space-y-4">
                 <div className="flex justify-between items-center">
-                  <Label>Result</Label>
-                  <Button
-                    variant="ghost"
-                    size="icon"
-                    onClick={copyToClipboard}
-                  >
-                    <Copy className="h-4 w-4" />
+                  <Label>Replacements</Label>
+                  <Button variant="outline" onClick={addReplacement} size="sm">
+                    <Plus className="h-4 w-4 mr-2" />
+                    Add
                   </Button>
                 </div>
-                <div className="p-4 bg-muted rounded-lg">
-                  <pre className="whitespace-pre-wrap font-mono text-sm">
-                    {result}
-                  </pre>
-                </div>
-              </motion.div>
-            )}
+                
+                {replacements.map((replacement, index) => (
+                  <motion.div
+                    key={index}
+                    initial={{ opacity: 0, y: 20 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    className="grid gap-4 md:grid-cols-5 items-center"
+                  >
+                    <Input
+                      className="md:col-span-2"
+                      value={replacement.find}
+                      onChange={(e) => updateReplacement(index, 'find', e.target.value)}
+                      placeholder="Find..."
+                    />
+                    <Input
+                      className="md:col-span-2"
+                      value={replacement.replace}
+                      onChange={(e) => updateReplacement(index, 'replace', e.target.value)}
+                      placeholder="Replace with..."
+                    />
+                    <Button
+                      variant="destructive"
+                      size="icon"
+                      onClick={() => removeReplacement(index)}
+                    >
+                      <Trash2 className="h-4 w-4" />
+                    </Button>
+                  </motion.div>
+                ))}
+              </div>
+
+              <div className="flex items-center space-x-2">
+                <Switch
+                  checked={caseSensitive}
+                  onCheckedChange={setCaseSensitive}
+                  id="case-sensitive"
+                />
+                <Label htmlFor="case-sensitive">Case sensitive</Label>
+              </div>
+
+              <Button onClick={replaceText} className="w-full">
+                Replace Text
+              </Button>
+            </CardContent>
+          </Card>
+        </div>
+
+        <Card>
+          <CardContent className="pt-6">
+            <div className="space-y-2">
+              <div className="flex justify-between items-center">
+                <Label>Result</Label>
+                <Button
+                  variant="ghost"
+                  size="icon"
+                  onClick={copyToClipboard}
+                  disabled={!result}
+                >
+                  <Copy className="h-4 w-4" />
+                </Button>
+              </div>
+              <div className="p-4 bg-muted rounded-lg min-h-[200px]">
+                <pre className="whitespace-pre-wrap font-mono text-sm">
+                  {result || "Modified text will appear here..."}
+                </pre>
+              </div>
+            </div>
           </CardContent>
         </Card>
       </div>

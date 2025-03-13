@@ -1,58 +1,64 @@
-import { motion } from "framer-motion";
 import { categories } from "@/lib/tool-categories";
-import { ToolCard } from "@/components/tool-card";
-
-const container = {
-  hidden: { opacity: 0 },
-  show: {
-    opacity: 1,
-    transition: {
-      staggerChildren: 0.1
-    }
-  }
-};
+import { motion } from "framer-motion";
+import { Card } from "@/components/ui/card";
+import { Link } from "wouter";
+import AdSense from "@/components/AdSense";
 
 export default function Home() {
+  // Filter out the "All Tools" category and get only main categories
+  const mainCategories = categories.filter(cat => cat.name !== "All Tools");
+
   return (
-    <div className="p-6 space-y-12">
-      <motion.div 
+    <div className="container mx-auto py-8">
+      <motion.div
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
-        className="max-w-3xl"
+        className="space-y-8"
       >
-        <h1 className="text-5xl font-bold bg-gradient-to-r from-primary via-purple-500 to-pink-500 bg-clip-text text-transparent mb-4">
-          Developer Tools
-        </h1>
-        <p className="text-muted-foreground text-xl">
-          A comprehensive collection of tools for developers, designers and content creators.
-        </p>
+        <div className="prose prose-lg dark:prose-invert">
+          <h1 className="bg-clip-text text-transparent bg-gradient-to-r from-primary via-secondary to-accent inline-block">
+            Web Toolkit
+          </h1>
+          <p className="text-xl text-muted-foreground">
+            Choose a category to explore our tools
+          </p>
+        </div>
+
+        {/* Top Ad */}
+        <AdSense adSlot="1234567890" />
+
+        <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
+          {mainCategories.map((category, index) => (
+            <motion.div
+              key={category.name}
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ delay: index * 0.1 }}
+            >
+              <Link href={`/category/${category.name.toLowerCase().replace(/[^a-z0-9]+/g, '-')}`}>
+                <Card className="p-6 hover:shadow-lg transition-all cursor-pointer group">
+                  <div className="flex items-center gap-4">
+                    <div className="p-2 rounded-lg bg-primary/10 group-hover:bg-primary/20 transition-colors">
+                      <category.icon className="w-6 h-6 text-primary" />
+                    </div>
+                    <div>
+                      <h2 className="text-xl font-semibold group-hover:text-primary transition-colors">
+                        {category.name}
+                      </h2>
+                      <p className="text-sm text-muted-foreground">
+                        {category.tools.length} tools
+                      </p>
+                    </div>
+                  </div>
+                </Card>
+              </Link>
+            </motion.div>
+          ))}
+        </div>
+
+        {/* Bottom Ad */}
+        <AdSense adSlot="0987654321" adFormat="horizontal" />
       </motion.div>
-
-      {categories.map((category, categoryIndex) => (
-        <motion.div 
-          key={category.name}
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ delay: categoryIndex * 0.1 }}
-          className="space-y-6"
-        >
-          <div className="flex items-center space-x-3">
-            <category.icon className="h-6 w-6 text-primary" />
-            <h2 className="text-3xl font-semibold">{category.name}</h2>
-          </div>
-
-          <motion.div
-            variants={container}
-            initial="hidden"
-            animate="show"
-            className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6"
-          >
-            {category.tools.map((tool, index) => (
-              <ToolCard key={tool.path} tool={tool} index={index} />
-            ))}
-          </motion.div>
-        </motion.div>
-      ))}
     </div>
   );
 }
